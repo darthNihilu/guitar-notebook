@@ -1,6 +1,5 @@
 "use client";
 
-import {SongsProvider} from "@/components/SongsContext";
 import {NextUIProvider} from "@nextui-org/system";
 import {ThemeProvider as NextThemesProvider} from "next-themes";
 import {ThemeProviderProps} from "next-themes/dist/types";
@@ -18,7 +17,7 @@ export function Providers({children, themeProps}: ProvidersProps) {
     return (
         <NextUIProvider navigate={router.push}>
             <NextThemesProvider {...themeProps}>
-                <SongsProvider>{children}</SongsProvider></NextThemesProvider>
+                {children}</NextThemesProvider>
         </NextUIProvider>
     );
 }

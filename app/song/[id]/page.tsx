@@ -1,14 +1,26 @@
-"use client"
-import {useSongs} from "@/components/SongsContext";
+import {SongType} from "@/config";
+import {headers} from "next/headers";
 
 type FormattedLine = {
     chords: string;
     lyrics: string;
 }
 
-export default function Song({params}: { params: { id: string } }) {
-    const {songs} = useSongs();
-    const foundSong = songs.find(song => song.id === Number(params.id));
+async function getSongById(id: string): Promise<SongType> {
+    const requestUrl = headers().get('x-url')
+    const data = await fetch(`${requestUrl}/api?id=${id}`)
+
+
+    if (!data.ok) {
+        throw new Error('Failed to fetch data')
+    }
+
+    return data.json()
+}
+
+export default async function Song({params}: { params: { id: string } }) {
+    const foundSong = await getSongById(params.id)
+
 
     // Helper function to parse and format song content
     const formatSongContent = (content: string): FormattedLine[] => {

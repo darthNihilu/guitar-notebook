@@ -1,75 +1,35 @@
-"use client"
+import {AddSongButton} from "@/components/AddSongButton";
 import {SongItem} from "@/components/SongItem/SongItem";
-import {useSongs} from "@/components/SongsContext";
-import {Button} from "@nextui-org/button";
-import {Textarea} from "@nextui-org/input";
-import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure} from "@nextui-org/modal";
-import {useState} from "react";
+import {SongType} from "@/config";
+import {headers} from "next/headers";
 
 
-export default function Home() {
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+async function getSongs(): Promise<SongType[]> {
+    const requestUrl = headers().get('x-url')
+    const data = await fetch(`${requestUrl}/api/`)
 
-    const [textAreaValue, setTextAreaValue] = useState<string>("")
-
-    const updateTextAreaValue = (value: string) => {
-        setTextAreaValue(value)
+    if (!data.ok) {
+        throw new Error('Failed to fetch data')
     }
 
-    const {songs, setSongs} = useSongs();
+    return data.json()
+}
+
+export default async function Home() {
 
 
-    const onAddNewSong = () => {
-        const newSong = {
-            id: songs.length + 1,
-            title: "New song",
-            content: textAreaValue
-        };
-        setSongs([...songs, newSong]);
-        setTextAreaValue("");
-        onOpenChange();
-    };
+    const songs = await getSongs()
 
     return (
         <section className="flex flex-col gap-4 py-8 md:py-10">
-            <div>
+            <div className="pb-10">
                 {songs.map((song, index) => {
                     return (
                         <SongItem song={song} key={index} index={index}/>
                     )
                 })}
             </div>
-            <div className="absolute bottom-4 flex justify-center items-center w-full left-0">
-                <Button color="primary" className="text-lg font-normal" onPress={onOpen}>
-                    Добавить песню
-                </Button>
-                <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="center">
-                    <ModalContent>
-                        {(onClose) => (
-                            <>
-                                <ModalHeader className="flex flex-col gap-1">Добавление песни</ModalHeader>
-                                <ModalBody>
-                                    <Textarea
-                                        label="Description"
-                                        placeholder="Enter your description"
-                                        className="max-w-xs"
-                                        value={textAreaValue}
-                                        onValueChange={updateTextAreaValue}
-                                    />
-                                </ModalBody>
-                                <ModalFooter>
-                                    <Button color="danger" variant="light" onPress={onClose}>
-                                        Close
-                                    </Button>
-                                    <Button color="primary" onPress={onAddNewSong}>
-                                        Action
-                                    </Button>
-                                </ModalFooter>
-                            </>
-                        )}
-                    </ModalContent>
-                </Modal>
-            </div>
+            <AddSongButton/>
         </section>
     );
 }
