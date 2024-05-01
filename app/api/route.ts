@@ -3,7 +3,7 @@ import fs from "fs/promises"; // Use promises for async file operations
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 
-const songsFilePath = path.join(process.cwd(), "shared/db", "songs.json");
+const songsFilePath = path.join(process.cwd(), "db", "songs.json");
 
 async function loadSongs() {
 	const data = await fs.readFile(songsFilePath, "utf8");

@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  nextapp:
+    container_name: guitar-notebook
+    image: nextapp
+    build: .
+    ports:
+      - "3013:3000"
+    environment:
+      - DOCKER_MY_ENV=http://192.168.0.32:3013

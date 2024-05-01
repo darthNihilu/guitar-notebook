@@ -1,12 +1,19 @@
 import { SongType } from "@config/index";
 import { toast } from "react-toastify";
+import { getEnv } from "../../env/env";
 
 class SongService {
 	// static baseUrl = headers().get("x-url");
-	static baseUrl = "http://localhost:3000";
+
+	static getBaseUrl() {
+		return process.env.NEXT_PUBLIC_API_URI || "http://localhost:3000";
+	}
 
 	static async handleRequest(url: string, options?: RequestInit): Promise<any> {
-		const response = await fetch(url, options);
+		const res = await getEnv();
+		console.log(res);
+		const fullUrl = `${this.getBaseUrl()}/api${url}`;
+		const response = await fetch(fullUrl, options);
 		if (!response.ok) {
 			const errMsg = await response.text();
 			throw new Error(errMsg || "An error occurred while processing the request.");
@@ -15,11 +22,11 @@ class SongService {
 	}
 
 	static async getSongs(): Promise<SongType[]> {
-		return this.handleRequest(`${this.baseUrl}/api/`);
+		return this.handleRequest(`/`);
 	}
 
 	static async getSongById(id: string): Promise<SongType> {
-		return this.handleRequest(`${this.baseUrl}/api?id=${id}`);
+		return this.handleRequest(`?id=${id}`);
 	}
 
 	static async addNewSong(songTitle: string, songContent: string): Promise<void | boolean> {
@@ -31,8 +38,7 @@ class SongService {
 			body: JSON.stringify({ title: songTitle, content: songContent }),
 		};
 		try {
-			const id = await this.handleRequest(`${this.baseUrl}/api/`, options);
-			console.log("id", id);
+			const id = await this.handleRequest(`/`, options);
 			toast("Песня успешно добавлена", { type: "success" });
 			return id;
 		} catch (e) {
@@ -48,7 +54,7 @@ class SongService {
 			},
 		};
 		try {
-			await this.handleRequest(`${this.baseUrl}/api?id=${songId}`, options);
+			await this.handleRequest(`?id=${songId}`, options);
 			return true;
 		} catch (e) {
 			toast("Ошибка при удалении песни", { type: "error" });
@@ -64,7 +70,7 @@ class SongService {
 			body: JSON.stringify(song),
 		};
 		try {
-			await this.handleRequest(`${this.baseUrl}/api?id=${song.id}`, options);
+			await this.handleRequest(`?id=${song.id}`, options);
 			toast("Песня успешно обновлена", { type: "success" });
 			return true;
 		} catch (e) {
