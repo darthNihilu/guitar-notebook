@@ -5,12 +5,12 @@ class SongService {
 	// static baseUrl = headers().get("x-url");
 
 	static getBaseUrl() {
-		return process.env.NEXT_PUBLIC_API_URI || "https://127.0.0.1:3013";
+		return process.env.NEXT_PUBLIC_API_URI || "https://backend.guitar.jectis.ru";
 	}
 
 	static async handleRequest(url: string, options?: RequestInit): Promise<any> {
 		try {
-			const fullUrl = `${this.getBaseUrl()}/api${url}`;
+			const fullUrl = `${this.getBaseUrl()}/song${url}`;
 			const response = await fetch(fullUrl, options);
 			if (!response.ok) {
 				const errMsg = await response.text();
@@ -41,7 +41,7 @@ class SongService {
 	}
 
 	static async getSongById(id: string): Promise<SongType> {
-		return this.handleRequest(`?id=${id}`);
+		return this.handleRequest(`/${id}`);
 	}
 
 	static async addNewSong(songTitle: string, songContent: string): Promise<void | boolean> {
@@ -53,7 +53,7 @@ class SongService {
 			body: JSON.stringify({ title: songTitle, content: songContent }),
 		};
 		try {
-			const id = await this.handleRequest(`/`, options);
+			const { id } = await this.handleRequest(`/`, options);
 			toast("Песня успешно добавлена", { type: "success" });
 			return id;
 		} catch (e) {
@@ -69,7 +69,7 @@ class SongService {
 			},
 		};
 		try {
-			await this.handleRequest(`?id=${songId}`, options);
+			await this.handleRequest(`/${songId}`, options);
 			return true;
 		} catch (e) {
 			toast("Ошибка при удалении песни", { type: "error" });
@@ -78,14 +78,14 @@ class SongService {
 
 	static async updateSong(song: SongType): Promise<void | boolean> {
 		const options = {
-			method: "PUT",
+			method: "PATCH",
 			headers: {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify(song),
 		};
 		try {
-			await this.handleRequest(`?id=${song.id}`, options);
+			await this.handleRequest(`/${song.id}`, options);
 			toast("Песня успешно обновлена", { type: "success" });
 			return true;
 		} catch (e) {

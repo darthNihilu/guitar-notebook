@@ -1,4 +1,3 @@
-export const dynamic = "force-dynamic";
 import SongService from "@api/SongService";
 import { AddSongButton } from "@components/AddSongButton";
 import { SongItem } from "@components/SongItem/SongItem";

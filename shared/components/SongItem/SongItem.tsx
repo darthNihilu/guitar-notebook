@@ -17,7 +17,7 @@ export const SongItem: React.FC<Props> = ({ song, index }) => {
 	return (
 		<div key={song.title}>
 			<button className="text-2xl font-bold" onClick={navigateToSong}>
-				<span>{song.id}.</span> {song.title}
+				<span>{index + 1}.</span> {song.title}
 			</button>
 		</div>
 	);

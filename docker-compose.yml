@@ -7,7 +7,7 @@ services:
     build:
       context: .
       args:
-        NEXT_PUBLIC_API_URI: "http://localhost:3013"
+        NEXT_PUBLIC_API_URI: "http://backend.guitar.jectis.ru"
     ports:
       - "3013:3000"
     volumes:
