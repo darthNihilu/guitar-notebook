@@ -1,28 +1,43 @@
 import { SongType } from "@config/index";
 import { toast } from "react-toastify";
-import { getEnv } from "../../env/env";
 
 class SongService {
 	// static baseUrl = headers().get("x-url");
 
 	static getBaseUrl() {
-		return process.env.NEXT_PUBLIC_API_URI || "http://localhost:3000";
+		return process.env.NEXT_PUBLIC_API_URI || "https://127.0.0.1:3013";
 	}
 
 	static async handleRequest(url: string, options?: RequestInit): Promise<any> {
-		const res = await getEnv();
-		console.log(res);
-		const fullUrl = `${this.getBaseUrl()}/api${url}`;
-		const response = await fetch(fullUrl, options);
-		if (!response.ok) {
-			const errMsg = await response.text();
-			throw new Error(errMsg || "An error occurred while processing the request.");
+		try {
+			const fullUrl = `${this.getBaseUrl()}/api${url}`;
+			const response = await fetch(fullUrl, options);
+			if (!response.ok) {
+				const errMsg = await response.text();
+				throw new Error(errMsg || "An error occurred while processing the request.");
+			}
+			return response.json();
+		} catch (error: unknown) {
+			// Typing the error as unknown
+			// We need to assert the type of the error before accessing any properties
+			if (error instanceof Error) {
+				console.error(`Failed to fetch from ${url}: ${error.message}`);
+				throw new Error(`Failed to fetch from ${url}: ${error.message}`);
+			} else {
+				// If the error is not an instance of Error, handle it differently or rethrow a generic error
+				console.error(`An unexpected error occurred: ${error}`);
+				throw new Error("An unexpected error occurred");
+			}
 		}
-		return response.json();
 	}
 
 	static async getSongs(): Promise<SongType[]> {
-		return this.handleRequest(`/`);
+		try {
+			return this.handleRequest(`/`);
+		} catch (e) {
+			toast("Ошибка при загрузке песен", { type: "error" });
+			return [];
+		}
 	}
 
 	static async getSongById(id: string): Promise<SongType> {

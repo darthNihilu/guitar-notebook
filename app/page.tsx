@@ -1,8 +1,10 @@
+export const dynamic = "force-dynamic";
+import SongService from "@api/SongService";
 import { AddSongButton } from "@components/AddSongButton";
 import { SongItem } from "@components/SongItem/SongItem";
 
 export default async function Home() {
-	const songs: any[] = [];
+	const songs = await SongService.getSongs();
 
 	return (
 		<section className="flex flex-col gap-4 py-8 md:py-10">

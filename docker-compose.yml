@@ -4,8 +4,11 @@ services:
   nextapp:
     container_name: guitar-notebook
     image: nextapp
-    build: .
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_API_URI: "http://localhost:3013"
     ports:
       - "3013:3000"
-    environment:
-      - DOCKER_MY_ENV=http://192.168.0.32:3013
+    volumes:
+      - ./db:/app/db

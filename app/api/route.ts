@@ -6,8 +6,14 @@ import path from "path";
 const songsFilePath = path.join(process.cwd(), "db", "songs.json");
 
 async function loadSongs() {
-	const data = await fs.readFile(songsFilePath, "utf8");
-	return JSON.parse(data);
+	try {
+		const data = await fs.readFile(songsFilePath, "utf8");
+		console.log({ data });
+		return JSON.parse(data);
+	} catch (error) {
+		console.error("Failed to load songs:", error);
+		return [];
+	}
 }
 
 async function loadSongById(id: number) {
