@@ -10,8 +10,15 @@ class SongService {
 
 	static async handleRequest(url: string, options?: RequestInit): Promise<any> {
 		try {
-			const fullUrl = `${this.getBaseUrl()}/song${url}`;
-			const response = await fetch(fullUrl, options);
+			const fullUrl = `${this.getBaseUrl()}/song${url}?nocache=${Date.now()}`;
+			const response = await fetch(fullUrl, {
+				...options,
+				headers: {
+					"Content-Type": "application/json",
+					"Cache-Control": "no-cache",
+				},
+				next: { revalidate: 60 },
+			});
 			if (!response.ok) {
 				const errMsg = await response.text();
 				throw new Error(errMsg || "An error occurred while processing the request.");
@@ -47,9 +54,6 @@ class SongService {
 	static async addNewSong(songTitle: string, songContent: string): Promise<void | boolean> {
 		const options = {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
 			body: JSON.stringify({ title: songTitle, content: songContent }),
 		};
 		try {
@@ -64,9 +68,6 @@ class SongService {
 	static async deleteSong(songId: number): Promise<void | boolean> {
 		const options = {
 			method: "DELETE",
-			headers: {
-				"Content-Type": "application/json",
-			},
 		};
 		try {
 			await this.handleRequest(`/${songId}`, options);
@@ -79,9 +80,6 @@ class SongService {
 	static async updateSong(song: SongType): Promise<void | boolean> {
 		const options = {
 			method: "PATCH",
-			headers: {
-				"Content-Type": "application/json",
-			},
 			body: JSON.stringify(song),
 		};
 		try {

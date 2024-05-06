@@ -7,8 +7,6 @@ services:
     build:
       context: .
       args:
-        NEXT_PUBLIC_API_URI: "http://backend.guitar.jectis.ru"
+        NEXT_PUBLIC_API_URI: "https://backend.guitar.jectis.ru"
     ports:
       - "3013:3000"
-    volumes:
-      - ./db:/app/db
