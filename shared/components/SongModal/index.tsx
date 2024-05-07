@@ -43,6 +43,7 @@ export const SongModal: React.FC<Props> = ({ onConfirm, initialValues }) => {
 							placeholder="Введите текст песни"
 							value={textAreaValue}
 							onValueChange={updateTextAreaValue}
+							maxRows={20}
 						/>
 					</ModalBody>
 					<ModalFooter>

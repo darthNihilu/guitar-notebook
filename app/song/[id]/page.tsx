@@ -23,8 +23,8 @@ export default async function Song({ params }: { params: { id: string } }) {
 							const { chords, lyrics } = item;
 							return (
 								<div className="font-bold" key={idx}>
-									<div className="text-blue-500">{chords}</div>
-									<div>{lyrics}</div>
+									<div className="text-blue-500 leading-none">{chords}</div>
+									<div className="leading-snug">{lyrics}</div>
 								</div>
 							);
 						}

@@ -24,7 +24,7 @@ export const AddSongButton = () => {
 			<Button color="primary" className="text-lg font-normal" onPress={onOpen}>
 				Добавить песню
 			</Button>
-			<Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="center">
+			<Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="center" size="full">
 				<SongModal onConfirm={onAddNewSong} />
 			</Modal>
 		</div>

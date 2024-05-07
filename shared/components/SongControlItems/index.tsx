@@ -34,13 +34,15 @@ export const SongControlItems: React.FC<Props> = ({ foundSong }) => {
 
 	return (
 		<>
-			<div className="fixed right-6 z-40 flex flex-col justify-center items-center gap-2 h-full">
-				<Button className="min-w-0" onClick={onEditModalOpen}>
-					<EditIcon />
-				</Button>
-				<Button className="min-w-0" onClick={onOpen}>
-					<DeleteIcon />
-				</Button>
+			<div className="fixed right-2 z-40 h-full flex justify-center flex-col">
+				<div className="flex flex-col justify-center items-center h-fit gap-2 p-1 bg-blue-200 rounded-lg">
+					<Button className="min-w-0" onClick={onEditModalOpen} color="primary">
+						<EditIcon />
+					</Button>
+					<Button className="min-w-0" onClick={onOpen} color="primary">
+						<DeleteIcon />
+					</Button>
+				</div>
 			</div>
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="center">
 				<ModalContent>
@@ -59,7 +61,7 @@ export const SongControlItems: React.FC<Props> = ({ foundSong }) => {
 					)}
 				</ModalContent>
 			</Modal>
-			<Modal isOpen={isEditModalOpen} onOpenChange={onOpenEditModalChange} placement="center">
+			<Modal isOpen={isEditModalOpen} onOpenChange={onOpenEditModalChange} placement="center" size="full">
 				<SongModal
 					initialValues={{ title: foundSong.title, content: foundSong.content }}
 					onConfirm={onChangeSongHandler}
